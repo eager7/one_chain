@@ -1,4 +1,4 @@
-package go_cosmos
+package go_cos
 
 import "github.com/spf13/viper"
 

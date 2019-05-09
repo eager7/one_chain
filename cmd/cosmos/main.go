@@ -3,13 +3,13 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/eager7/one_chain/go_cosmos"
+	"github.com/eager7/one_chain/go_cosmos/go_cos"
 )
 
 func main() {
 	fmt.Println("start go go_cosmos program...")
 
-	cli := go_cosmos.Initialize("/tmp/config.toml")
+	cli := go_cos.Initialize("/tmp/config.toml")
 	block, err := cli.GetBlockByNumber(207503)
 	if err != nil {
 		panic(err)

@@ -1,4 +1,4 @@
-package go_cosmos
+package go_cos
 
 import (
 	"fmt"
