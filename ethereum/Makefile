@@ -6,13 +6,9 @@ BUILD_TIME=`date +%Y%m%d%H%M%S`
 # Setup the -ldflags option for go build here, interpolate the variable values
 LDFLAGS=-ldflags "-X main.Version=${GITTAG} -X main.Build_Time=${BUILD_TIME} -s -w"
 
-cosmos_cli: go.sum
-#	GO111MODULE=on go mod edit -replace github.com/golang/crypto@v0.0.0-20190222235706-ffb98f73852f=github.com/tendermint/crypto@v0.0.0-20180820045704-3764759f34a5
-	export GOPROXY="https://athens.azurefd.net" && GO111MODULE=on go build ${LDFLAGS} -o build/go_cosmos_client ./cmd/cosmos/main.go
-
-eth_cli: go.sum
+eth_cli:
 #	GO111MODULE=on go mod edit -replace golang.org/x/crypto@v0.0.0-20180904163835-0709b304e793=github.com/golang/crypto@v0.0.0-20190222235706-ffb98f73852f
-	export GOPROXY="https://athens.azurefd.net" && GO111MODULE=on go build ${LDFLAGS} -o build/go_eth_client ./cmd/ethereum/main.go
+	export GOPROXY="https://athens.azurefd.net" && GO111MODULE=on go build ${LDFLAGS} -o build/go_eth_client main.go
 
 depends:
 	GO111MODULE=on go mod download
