@@ -10,7 +10,7 @@ import (
 func main() {
 	fmt.Println("get ethereum block test...")
 	ctx := context.Background()
-	client, err := new(go_eth.Eth).Initialize(ctx, "wss://ropsten.infura.io/ws")
+	client, err := new(go_eth.Eth).Initialize(ctx, "wss://mainnet.infura.io/ws")
 	if err != nil {
 		panic(err)
 	}
@@ -18,6 +18,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(block.Transactions().Len())
+	fmt.Println(block.Hash().Hex(), block.Transactions().Len())
 	go client.SubscribeNewHeader()
+	select{}
 }
