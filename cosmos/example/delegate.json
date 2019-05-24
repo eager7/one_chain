@@ -1,0 +1,71 @@
+{
+    "height": "384876",
+    "txhash": "71C75335366945B0ACADA5BE91055BECB6C906329A00E80846F533FD7597A872",
+    "data": "0C08B0EA87E8051084BB96F002",
+    "raw_log": "[{\"msg_index\":\"0\",\"success\":true,\"log\":\"\"}]",
+    "logs": [
+        {
+            "msg_index": "0",
+            "success": true,
+            "log": ""
+        }
+    ],
+    "gas_wanted": "150000",
+    "gas_used": "93786",
+    "tags": [
+        {
+            "key": "action",
+            "value": "begin_unbonding"
+        },
+        {
+            "key": "delegator",
+            "value": "cosmos1e7wj5ya0czht8jcqtg5e68mla7qju8nx83hae3"
+        },
+        {
+            "key": "source-validator",
+            "value": "cosmosvaloper1cgh5ksjwy2sd407lyre4l3uj2fdrqhpkzp06e6"
+        },
+        {
+            "key": "end-time",
+            "value": "2019-06-13T07:03:12Z"
+        }
+    ],
+    "tx": {
+        "type": "auth/StdTx",
+        "value": {
+            "msg": [
+                {
+                    "type": "cosmos-sdk/MsgUndelegate",
+                    "value": {
+                        "delegator_address": "cosmos1e7wj5ya0czht8jcqtg5e68mla7qju8nx83hae3",
+                        "validator_address": "cosmosvaloper1cgh5ksjwy2sd407lyre4l3uj2fdrqhpkzp06e6",
+                        "amount": {
+                            "denom": "uatom",
+                            "amount": "299000000"
+                        }
+                    }
+                }
+            ],
+            "fee": {
+                "amount": [
+                    {
+                        "denom": "uatom",
+                        "amount": "450"
+                    }
+                ],
+                "gas": "150000"
+            },
+            "signatures": [
+                {
+                    "pub_key": {
+                        "type": "tendermint/PubKeySecp256k1",
+                        "value": "AyL7958bXIsiiC/lwvoBGHWC6jwHM9nLMbYK+OmGvd33"
+                    },
+                    "signature": "Wo3G96f8gpSjDogliGCncbh1xWXBGC4JXhoE9Z37a7ECYFYt+5dQZ+mXwV8st+/6aA4GHouq2a/zXumGOzaUzA=="
+                }
+            ],
+            "memo": "undelegate from imToken"
+        }
+    },
+    "timestamp": "2019-05-23T07:03:12Z"
+}

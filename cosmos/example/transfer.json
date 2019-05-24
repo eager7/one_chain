@@ -1,0 +1,68 @@
+{
+    "height": "384876",
+    "txhash": "FEE4C24581F7B82DE3157859243748B7166EAD57263A3B28CCAC1EF71EBBD869",
+    "raw_log": "[{\"msg_index\":\"0\",\"success\":true,\"log\":\"\"}]",
+    "logs": [
+        {
+            "msg_index": "0",
+            "success": true,
+            "log": ""
+        }
+    ],
+    "gas_wanted": "40000",
+    "gas_used": "28327",
+    "tags": [
+        {
+            "key": "action",
+            "value": "send"
+        },
+        {
+            "key": "sender",
+            "value": "cosmos1nm0rrq86ucezaf8uj35pq9fpwr5r82cl8sc7p5"
+        },
+        {
+            "key": "recipient",
+            "value": "cosmos14z8fgprav77c8scfazhqkcvmt94yd5wsnnz7u7"
+        }
+    ],
+    "tx": {
+        "type": "auth/StdTx",
+        "value": {
+            "msg": [
+                {
+                    "type": "cosmos-sdk/MsgSend",
+                    "value": {
+                        "from_address": "cosmos1nm0rrq86ucezaf8uj35pq9fpwr5r82cl8sc7p5",
+                        "to_address": "cosmos14z8fgprav77c8scfazhqkcvmt94yd5wsnnz7u7",
+                        "amount": [
+                            {
+                                "denom": "uatom",
+                                "amount": "418300000"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "fee": {
+                "amount": [
+                    {
+                        "denom": "uatom",
+                        "amount": "300"
+                    }
+                ],
+                "gas": "40000"
+            },
+            "signatures": [
+                {
+                    "pub_key": {
+                        "type": "tendermint/PubKeySecp256k1",
+                        "value": "ApEvbc+4QJiDoaaXG6v0K3A4zmPON8pu4uzCm4o142u/"
+                    },
+                    "signature": "tCYoC7ODp1pLULcEs/+pggQEuFeayPDZYL0u/tfsstYienrGl8GxfBFsCY41mXzaHhBU/ZK1LRcdnUwPXSdIQQ=="
+                }
+            ],
+            "memo": ""
+        }
+    },
+    "timestamp": "2019-05-23T07:03:12Z"
+}
