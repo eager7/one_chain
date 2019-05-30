@@ -1,37 +1,24 @@
-DROP DATABASE IF EXISTS cosmos_database;
-CREATE DATABASE IF NOT EXISTS cosmos_database;
+DROP DATABASE IF EXISTS cosmos_db;
+CREATE DATABASE IF NOT EXISTS cosmos_db;
 
-CREATE TABLE IF NOT EXISTS cosmos_database.t_block_info (
+CREATE TABLE IF NOT EXISTS cosmos_db.t_block_info (
     `id`                BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `number`            BIGINT UNSIGNED     NOT NULL DEFAULT 0      COMMENT '区块高度',
-    `difficulty`        VARCHAR(64)         NOT NULL DEFAULT ''     COMMENT '当前区块难度值',
-    `extra_data`        CHAR(64)            NOT NULL DEFAULT ''     COMMENT '区块额外数据',
-    `gas_limit`         BIGINT UNSIGNED     NOT NULL DEFAULT 0      COMMENT '区块gas限额',
-    `gas_used`          BIGINT UNSIGNED     NOT NULL DEFAULT 0      COMMENT '当前区块使用gas',
     `hash`              CHAR(64)            NOT NULL DEFAULT ''     COMMENT '当前区块的哈希',
-    `logs_bloom`        VARCHAR(512)        NOT NULL DEFAULT ''     COMMENT '区块日志布隆过滤器',
     `miner`             CHAR(40)            NOT NULL DEFAULT ''     COMMENT '挖出此区块的矿工',
-    `mix_hash`          CHAR(64)            NOT NULL DEFAULT ''     COMMENT '混合哈希值',
-    `nonce`             BIGINT UNSIGNED     NOT NULL DEFAULT 0      COMMENT '区块随机值',
     `parent_hash`       CHAR(64)            NOT NULL DEFAULT ''     COMMENT '父区块的哈希值',
-    `receipts_root`     CHAR(64)            NOT NULL DEFAULT ''     COMMENT '区块中所有交易收据的收据根哈希',
-    `sha3_uncles`       CHAR(64)            NOT NULL DEFAULT ''     COMMENT '叔区块数据的哈希值',
-    `size`              CHAR(20)            NOT NULL DEFAULT ''     COMMENT '当前区块的大小',
-    `state_root`        CHAR(64)            NOT NULL DEFAULT ''     COMMENT '当前区块下状态树的根哈希值',
     `timestamp`         INT UNSIGNED        NOT NULL DEFAULT 0      COMMENT '当前区块时间戳',
-    `total_difficulty`  VARCHAR(64)         NOT NULL DEFAULT ''     COMMENT '当前区块总难度值',
-    `transactions_num`  SMALLINT UNSIGNED   NOT NULL DEFAULT 0      COMMENT '当前区块中的交易数量',
-    `transactions_root` CHAR(64)            NOT NULL DEFAULT ''     COMMENT '当前区块所有交易哈希根',
-    `uncles_hash`       VARCHAR(128)        NOT NULL DEFAULT ''     COMMENT '叔区块1哈希',
+    `trx_num`           SMALLINT UNSIGNED   NOT NULL DEFAULT 0      COMMENT '当前区块中的交易数量',
+    `total_trx_num`     SMALLINT UNSIGNED   NOT NULL DEFAULT 0      COMMENT '链区块中的交易总数量',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `number`(`number`),
-    KEY `hash`(`hash`(10))    USING BTREE ,
+    UNIQUE KEY `hash`(`hash`)    USING BTREE ,
+    KEY `number`(`number`),
     KEY `miner`(`miner`(10))   USING BTREE ,
     KEY `timestamp`(`timestamp`)   USING BTREE
 )ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 #此表单用来给遗漏的区块打补丁，入库的区块会将高度写入此表，定时查询此表，如果高度缺失，执行补漏程序
-CREATE TABLE IF NOT EXISTS cosmos_database.t_block_patch_info (
+CREATE TABLE IF NOT EXISTS cosmos_db.t_block_patch_info (
 `id`                BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '自增主键',
 `number`            BIGINT UNSIGNED     NOT NULL DEFAULT 0      COMMENT '区块高度',
 PRIMARY KEY (`id`),
@@ -39,7 +26,7 @@ UNIQUE KEY `number`(`number`)
 )ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE IF NOT EXISTS cosmos_database.t_transaction_info (
+CREATE TABLE IF NOT EXISTS cosmos_db.t_transaction_info (
     `id`                BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `block_hash`        CHAR(64)            NOT NULL DEFAULT ''     COMMENT '当前交易所在区块的哈希',
     `block_number`      BIGINT UNSIGNED     NOT NULL DEFAULT 0      COMMENT '当前交易所在区块的高度',
@@ -74,7 +61,7 @@ CREATE TABLE IF NOT EXISTS cosmos_database.t_transaction_info (
 
 # alter table eth_database.t_transfer_info add `tx_id` DOUBLE(12,4) NOT NULL DEFAULT 0 COMMENT '内联交易的全局ID，用区块高度和log偏移量组成的浮点数';
 # alter table eth_database.t_transfer_info add index `tx_id`(`tx_id`) USING BTREE;
-CREATE TABLE IF NOT EXISTS cosmos_database.t_transfer_info (
+CREATE TABLE IF NOT EXISTS cosmos_db.t_transfer_info (
 `id`                BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT COMMENT '自增主键',
 `address`           CHAR(40)            NOT NULL DEFAULT ''     COMMENT '合约地址',
 `block_hash`        CHAR(64)            NOT NULL DEFAULT ''     COMMENT '当前交易所在区块的哈希',
@@ -99,7 +86,7 @@ KEY `block_hash`(`block_hash`(10)) USING BTREE ,
 KEY `value`(`value`) USING BTREE
 )ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS cosmos_database.t_asserts_info (
+CREATE TABLE IF NOT EXISTS cosmos_db.t_asserts_info (
 `id`                BIGINT UNSIGNED             NOT NULL AUTO_INCREMENT     COMMENT '自增主键',
 `address`           CHAR(40)                    NOT NULL DEFAULT ''         COMMENT '账户地址',
 `contract`          CHAR(40)                    NOT NULL DEFAULT ''         COMMENT '资产合约地址，避免重名无法辨识问题',

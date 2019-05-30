@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/eager7/one_chain/cosmos/go_cos"
 )
@@ -10,13 +9,24 @@ func main() {
 	fmt.Println("start go cosmos program...")
 
 	cli := go_cos.Initialize("/tmp/config.toml")
-	block, err := cli.GetBlockByNumber(207503)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(cli.JsonString(block))
-	txs := cli.ParseTransaction(block)
-	for _, tx := range txs {
-		fmt.Println("hash:", hex.EncodeToString(tx.Hash()))
+	go CosMosBlockThread(cli)
+	select {}
+}
+
+func CosMosBlockThread(cli *go_cos.CosCli) {
+	var height int64 = 12905
+	for {
+		block, err := cli.GetBlockByNumber(height)
+		if err != nil {
+			panic(err)
+		}
+		txs, err := cli.ParseTransaction(block)
+		if err != nil {
+			panic(err)
+		}
+		if err := cli.HandleTransactions(txs); err != nil {
+			panic(err)
+		}
+		height++
 	}
 }
