@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-var log = elog.NewLogger("cosmos", elog.DebugLevel)
+var log = elog.NewLogger("cosmos", elog.InfoLevel)
 
 type Transaction struct {
 	Tx      auth.StdTx
@@ -49,13 +49,13 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 					if !ok {
 						return errors.New("can't convert to send")
 					}
-					log.Debug(tx.Receipt.Height, "send-->from:", msg.FromAddress.String(), "to:", msg.ToAddress.String(), "amount:", msg.Amount)
+					log.Debug(tx.Receipt.Height, "send-->from:", msg.FromAddress.String(), "to:", msg.ToAddress.String(), "amount:", msg.Amount, tx.Receipt.TxHash)
 				case "multisend":
 					msg, ok := m.(bank.MsgMultiSend)
 					if !ok {
 						return errors.New("can't convert to multisend")
 					}
-					log.Debug(tx.Receipt.Height, "multisend-->inputs:", msg.Inputs, "outputs:", msg.Outputs)
+					log.Debug(tx.Receipt.Height, "multisend-->inputs:", msg.Inputs, "outputs:", msg.Outputs, tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
@@ -66,33 +66,34 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 					if !ok {
 						return errors.New("can't convert to delegate")
 					}
-					log.Debug(tx.Receipt.Height, "delegate-->delegator_address:", msg.DelegatorAddress, "validator_address:", msg.ValidatorAddress, "amount:", msg.Amount)
+					log.Debug(tx.Receipt.Height, "delegate-->delegator_address:", msg.DelegatorAddress, "validator_address:", msg.ValidatorAddress, "amount:", msg.Amount, tx.Receipt.TxHash)
 				case "edit_validator":
 					msg, ok := m.(staking.MsgEditValidator)
 					if !ok {
 						return errors.New("can't convert to delegate")
 					}
 					log.Debug(tx.Receipt.Height, "edit_validator-->moniker:", msg.Moniker, "identity:", msg.Identity, "website:", msg.Website, "details:", msg.Details, "address:",
-						msg.ValidatorAddress, "commission_rate:", msg.CommissionRate, "min_self_delegation:", msg.MinSelfDelegation)
+						msg.ValidatorAddress, "commission_rate:", msg.CommissionRate, "min_self_delegation:", msg.MinSelfDelegation, tx.Receipt.TxHash)
 				case "begin_unbonding":
 					msg, ok := m.(types.MsgUndelegate)
 					if !ok {
 						return errors.New("can't convert to begin_unbonding")
 					}
-					log.Debug(tx.Receipt.Height, "begin_unbonding-->delegate:", msg.DelegatorAddress.String(), "validator:", msg.ValidatorAddress.String(), "amount:", msg.Amount)
+					log.Debug(tx.Receipt.Height, "begin_unbonding-->delegate:", msg.DelegatorAddress.String(), "validator:", msg.ValidatorAddress.String(), "amount:", msg.Amount, tx.Receipt.TxHash)
 				case "begin_redelegate":
 					msg, ok := m.(staking.MsgBeginRedelegate)
 					if !ok {
 						return errors.New("can't convert to begin_redelegate")
 					}
-					log.Debug(tx.Receipt.Height, "begin_redelegate-->delegator_address:", msg.DelegatorAddress, "validator_src_address:", msg.ValidatorSrcAddress, "validator_dst_address:", msg.ValidatorDstAddress, "amount:", msg.Amount)
+					log.Debug(tx.Receipt.Height, "begin_redelegate-->delegator_address:", msg.DelegatorAddress, "validator_src_address:", msg.ValidatorSrcAddress,
+						"validator_dst_address:", msg.ValidatorDstAddress, "amount:", msg.Amount, tx.Receipt.TxHash)
 				case "create_validator":
 					msg, ok := m.(staking.MsgCreateValidator)
 					if !ok {
 						return errors.New("can't convert to create_validator")
 					}
 					log.Debug(tx.Receipt.Height, "create_validator-->description:", msg.Description, "commission:", msg.Commission, "min_self_delegation:", msg.MinSelfDelegation,
-						"delegator_address:", msg.DelegatorAddress, "validator_address:", msg.ValidatorAddress, "pubkey:", msg.PubKey, "value:", msg.Value)
+						"delegator_address:", msg.DelegatorAddress, "validator_address:", msg.ValidatorAddress, "pubkey:", msg.PubKey, "value:", msg.Value, tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
@@ -103,19 +104,19 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 					if !ok {
 						return errors.New("can't convert to set_withdraw_address")
 					}
-					log.Debug(tx.Receipt.Height, "set_withdraw_address-->delegator_address:", msg.DelegatorAddress, "withdraw_address:", msg.WithdrawAddress)
+					log.Debug(tx.Receipt.Height, "set_withdraw_address-->delegator_address:", msg.DelegatorAddress, "withdraw_address:", msg.WithdrawAddress, tx.Receipt.TxHash)
 				case "withdraw_delegator_reward":
 					msg, ok := m.(draw.MsgWithdrawDelegatorReward)
 					if !ok {
 						return errors.New("can't convert to withdraw_delegator_reward")
 					}
-					log.Debug(tx.Receipt.Height, "withdraw_delegator_reward-->delegator_address:", msg.DelegatorAddress.String(), "validator_address:", msg.ValidatorAddress.String())
+					log.Debug(tx.Receipt.Height, "withdraw_delegator_reward-->delegator_address:", msg.DelegatorAddress.String(), "validator_address:", msg.ValidatorAddress.String(), tx.Receipt.TxHash)
 				case "withdraw_validator_rewards_all":
 					msg, ok := m.(draw.MsgWithdrawValidatorCommission)
 					if !ok {
 						return errors.New("can't convert to withdraw_validator_rewards_all")
 					}
-					log.Debug(tx.Receipt.Height, "withdraw_validator_rewards_all-->validator_address:", msg.ValidatorAddress)
+					log.Debug(tx.Receipt.Height, "withdraw_validator_rewards_all-->validator_address:", msg.ValidatorAddress, tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
@@ -126,20 +127,20 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 					if !ok {
 						return errors.New("can't convert to vote")
 					}
-					log.Debug(tx.Receipt.Height, "vote-->proposal_id:", msg.ProposalID, "voter:", msg.Voter, "option:", msg.Option.String())
+					log.Info(tx.Receipt.Height, "vote-->proposal_id:", msg.ProposalID, "voter:", msg.Voter, "option:", msg.Option.String(), tx.Receipt.TxHash)
 				case "deposit":
 					msg, ok := m.(gov.MsgDeposit)
 					if !ok {
 						return errors.New("can't convert to deposit")
 					}
-					log.Debug(tx.Receipt.Height, "deposit-->proposal_id:", msg.ProposalID, "depositor:", msg.Depositor, "amount:", msg.Amount)
+					log.Info(tx.Receipt.Height, "deposit-->proposal_id:", msg.ProposalID, "depositor:", msg.Depositor, "amount:", msg.Amount, tx.Receipt.TxHash)
 				case "submit_proposal":
 					msg, ok := m.(gov.MsgSubmitProposal)
 					if !ok {
 						return errors.New("can't convert to submit_proposal")
 					}
 					log.Debug(tx.Receipt.Height, "submit_proposal-->title:", msg.Title, "description:", msg.Description,
-						"proposal_type:", msg.ProposalType.String(), "proposer:", msg.Proposer.String(), "initial_deposit:", msg.InitialDeposit.String())
+						"proposal_type:", msg.ProposalType.String(), "proposer:", msg.Proposer.String(), "initial_deposit:", msg.InitialDeposit.String(), tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
@@ -151,13 +152,13 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 						return errors.New("can't convert to receive")
 					}
 					log.Debug(tx.Receipt.Height, "receive-->src_addr:", msg.SrcAddr, "dest_addr:", msg.DestAddr, "coins:", msg.Coins, "src_chain:",
-						msg.SrcChain, "dest_chain:", msg.DestChain, "address:", msg.Relayer, "sequence:", msg.Sequence)
+						msg.SrcChain, "dest_chain:", msg.DestChain, "address:", msg.Relayer, "sequence:", msg.Sequence, tx.Receipt.TxHash)
 				case "transfer":
 					msg, ok := m.(ibc.MsgIBCTransfer)
 					if !ok {
 						return errors.New("can't convert to receive")
 					}
-					log.Debug(tx.Receipt.Height, "receive-->src_addr:", msg.SrcAddr, "dest_addr:", msg.DestAddr, "coins:", msg.Coins, "src_chain:", msg.SrcChain, "dest_chain:", msg.DestChain)
+					log.Debug(tx.Receipt.Height, "receive-->src_addr:", msg.SrcAddr, "dest_addr:", msg.DestAddr, "coins:", msg.Coins, "src_chain:", msg.SrcChain, "dest_chain:", msg.DestChain, tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
@@ -168,7 +169,7 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 					if !ok {
 						return errors.New("can't convert to unjail")
 					}
-					log.Debug(tx.Receipt.Height, "unjail-->address:", msg.ValidatorAddr)
+					log.Debug(tx.Receipt.Height, "unjail-->address:", msg.ValidatorAddr, tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
@@ -179,7 +180,7 @@ func (c *CosCli) HandleTransactions(txs []Transaction) error {
 					if !ok {
 						return errors.New("can't convert to verify_invariant")
 					}
-					log.Debug(tx.Receipt.Height, "verify_invariant-->sender:", msg.Sender.String(), "invariant_module_name:", msg.InvariantModuleName, "invariant_route:", msg.InvariantRoute)
+					log.Debug(tx.Receipt.Height, "verify_invariant-->sender:", msg.Sender.String(), "invariant_module_name:", msg.InvariantModuleName, "invariant_route:", msg.InvariantRoute, tx.Receipt.TxHash)
 				default:
 					return errors.New("unknown msg type:" + m.Type())
 				}
