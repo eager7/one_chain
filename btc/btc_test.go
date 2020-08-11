@@ -51,7 +51,8 @@ func TestWallet(t *testing.T) {
 		t.Fatal(err)
 	}
 	for i := 0; i < 10; i++ {
-		pri, err := wallet.derivePrivateKey(hdwallet.MustParseDerivationPath(fmt.Sprintf("m/44'/%d'/0'/0/%d", param.HDCoinType, i)))
+		path := fmt.Sprintf("m/44'/%d'/0'/0/%d",param.HDCoinType, i)
+		pri, err := wallet.derivePrivateKey(hdwallet.MustParseDerivationPath(path))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -64,6 +65,6 @@ func TestWallet(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fmt.Println(param.HDCoinType, i, addressPubKeyHash.String(), hex.EncodeToString(wif.SerializePubKey()), wif.String())
+		fmt.Println(param.HDCoinType, i, path, addressPubKeyHash.String(), hex.EncodeToString(wif.SerializePubKey()), wif.String())
 	}
 }
